@@ -12,6 +12,7 @@ const totalPhotos = computed(() =>
   Object.values(regionPhotos.value).reduce((n, arr) => n + arr.length, 0)
 )
 const placeCount = places.length
+const visitedCount = visited.length
 
 // 地图与标记引用（非响应式）
 let map = null
@@ -98,13 +99,14 @@ onMounted(() => {
     map = new AMap.Map('travel-map', {
       zoom: 4,
       center: [104, 36],
-      mapStyle: 'amap://styles/whitesmoke',
+      mapStyle: 'amap://styles/darkblue',
       features: ['bg', 'road', 'building', 'point']
     })
 
-    const highlightStroke = '#7ed6a7'
-    const highlightFill = '#e6f7ec'
-    const normalStroke = '#b3c6e0'
+    // 打卡地图配色：去过的城市用金色点亮，其余省份用暗色淡轮廓
+    const highlightStroke = '#ffd166'
+    const highlightFill = '#ffd166'
+    const normalStroke = '#3a4a5f'
 
     // 中国轮廓 + 高亮去过的城市（跳过未访问的市级区域，减少多边形数量）
     AMap.plugin(['AMap.GeoJSON'], function () {
@@ -120,9 +122,9 @@ onMounted(() => {
             const opts = (path) => ({
               path,
               strokeColor: isVisited ? highlightStroke : normalStroke,
-              fillColor: isVisited ? highlightFill : '#ffffff',
-              fillOpacity: isVisited ? 0.6 : 0,
-              strokeWeight: 1.5,
+              fillColor: isVisited ? highlightFill : '#000000',
+              fillOpacity: isVisited ? 0.5 : 0,
+              strokeWeight: isVisited ? 2 : 1,
               zIndex: 100,
               extData: { name }
             })
@@ -135,15 +137,17 @@ onMounted(() => {
         })
     })
 
-    // 标记点（带旅行顺序编号）
-    const cityColor = '#667eea'
-    const natureColor = '#34c3a0'
-    places.forEach((p, i) => {
-      const color = p.type === 'city' ? cityColor : natureColor
+    // 标记点（发光圆点 + 城市名）
+    places.forEach((p) => {
       const marker = new AMap.Marker({
         position: [p.lng, p.lat],
-        content: `<div style="width:26px;height:26px;line-height:22px;text-align:center;background:${color};color:#fff;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35);font-size:13px;font-weight:700;cursor:pointer;">${i + 1}</div>`,
-        offset: new AMap.Pixel(-13, -13),
+        content: `
+          <div style="width:80px;text-align:center;">
+            <div style="width:12px;height:12px;background:#ffd166;border-radius:50%;border:2px solid #fff;box-shadow:0 0 10px #ffd166,0 0 22px rgba(255,209,102,.65);margin:0 auto;"></div>
+            <div style="margin-top:4px;color:#fff;font-size:12px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.9);white-space:nowrap;">${p.name}</div>
+          </div>
+        `,
+        offset: new AMap.Pixel(-40, -8),
         zIndex: 110
       })
       marker.setMap(map)
@@ -182,19 +186,29 @@ onMounted(() => {
 
 ## 我的足迹地图
 
-<div class="travel-stats">
-  <div class="stat">
-    <span class="stat-num">{{ placeCount }}</span>
-    <span class="stat-label">足迹</span>
-  </div>
-  <div class="stat">
-    <span class="stat-num">{{ totalPhotos }}</span>
-    <span class="stat-label">照片</span>
-  </div>
-</div>
+<div class="map-hero">
+  <div
+    id="travel-map"
+    style="width: 100%; height: 78vh; min-height: 560px;"
+  ></div>
 
-<div class="travel-layout">
-  <aside class="place-list">
+  <div class="map-stats">
+    <div class="stat">
+      <span class="stat-num">{{ placeCount }}</span>
+      <span class="stat-label">足迹</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">{{ visitedCount }}</span>
+      <span class="stat-label">点亮城市</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">{{ totalPhotos }}</span>
+      <span class="stat-label">照片</span>
+    </div>
+  </div>
+
+  <div class="map-panel">
+    <div class="panel-title">📍 我的足迹</div>
     <div
       v-for="(p, i) in places"
       :key="p.name"
@@ -208,13 +222,6 @@ onMounted(() => {
         <div class="place-item-meta">{{ p.date }}</div>
       </div>
     </div>
-  </aside>
-
-  <div class="map-wrap">
-    <div
-      id="travel-map"
-      style="width: 100%; height: 60vh; min-height: 480px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);"
-    ></div>
   </div>
 </div>
 
@@ -274,95 +281,107 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.travel-stats {
+.map-hero {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  margin: 0 0 48px;
+}
+.map-stats {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin: 24px 0 32px;
+  gap: 10px;
+  z-index: 200;
 }
 .stat {
-  flex: 1;
-  max-width: 200px;
   text-align: center;
-  background: #fff;
-  border: 1px solid rgba(102, 126, 234, 0.15);
-  border-radius: 16px;
-  padding: 20px 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+  background: rgba(15, 22, 34, 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px 18px;
+  min-width: 96px;
 }
 .stat-num {
   display: block;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 700;
-  color: #667eea;
+  color: #ffd166;
   line-height: 1;
 }
 .stat-label {
   display: block;
-  margin-top: 8px;
-  font-size: 13px;
-  color: #888;
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
 }
-
-.travel-layout {
-  display: flex;
-  gap: 16px;
-  margin: 0 0 48px;
-}
-.place-list {
-  width: 240px;
-  flex-shrink: 0;
+.map-panel {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  bottom: 16px;
+  width: 224px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 60vh;
+  padding: 12px;
+  background: rgba(15, 22, 34, 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
   overflow-y: auto;
+  z-index: 200;
+}
+.panel-title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 2px 4px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .place-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
+  padding: 9px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .place-item:hover {
-  border-color: #667eea;
-  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.15);
-  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 209, 102, 0.5);
 }
 .place-item.active {
-  border-color: #667eea;
-  background: #f4f5ff;
+  background: rgba(255, 209, 102, 0.16);
+  border-color: #ffd166;
 }
 .place-index {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
-  line-height: 24px;
+  line-height: 22px;
   text-align: center;
-  background: #667eea;
-  color: #fff;
+  background: #ffd166;
+  color: #1a1a1a;
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 .place-item-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: #fff;
 }
 .place-item-meta {
-  font-size: 12px;
-  color: #999;
-}
-.map-wrap {
-  flex: 1;
-  min-width: 0;
-  position: relative;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .travel-timeline {
@@ -521,17 +540,35 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .travel-layout {
-    flex-direction: column;
+  .map-stats {
+    top: 10px;
+    gap: 6px;
   }
-  .place-list {
-    width: 100%;
-    max-height: 220px;
+  .stat {
+    padding: 8px 10px;
+    min-width: 64px;
+  }
+  .stat-num {
+    font-size: 20px;
+  }
+  .stat-label {
+    font-size: 11px;
+  }
+  .map-panel {
+    top: auto;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: auto;
     flex-direction: row;
     overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .panel-title {
+    display: none;
   }
   .place-item {
-    min-width: 140px;
+    min-width: 132px;
     flex-shrink: 0;
   }
   .travel-timeline::before {
