@@ -1,6 +1,6 @@
 # 旅程
 
-记录我的旅行与见闻。
+<p class="page-tagline">记录我的旅行与见闻。</p>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
@@ -286,6 +286,25 @@ onMounted(() => {
 </div>
 
 <style scoped>
+.page-tagline {
+  font-size: 16px;
+  color: #8a94a6;
+  margin: 8px 0 8px;
+}
+h2 {
+  position: relative;
+  padding-left: 16px;
+}
+h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  background: linear-gradient(180deg, #667eea, #f093fb);
+  border-radius: 2px;
+}
 .travel-stats {
   display: flex;
   justify-content: center;
@@ -301,16 +320,21 @@ onMounted(() => {
 .stat {
   text-align: center;
   background: #fff;
-  border: 1px solid rgba(102, 126, 234, 0.15);
-  border-radius: 16px;
-  padding: 16px 20px;
-  min-width: 100px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.14);
+  border-radius: 18px;
+  padding: 20px 26px;
+  min-width: 110px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.16);
 }
 .stat-num {
   display: block;
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 34px;
+  font-weight: 800;
   color: #667eea;
   line-height: 1;
 }
@@ -356,10 +380,12 @@ onMounted(() => {
 .place-item:hover {
   background: rgba(102, 126, 234, 0.06);
   border-color: rgba(102, 126, 234, 0.3);
+  transform: translateX(3px);
 }
 .place-item.active {
   background: rgba(102, 126, 234, 0.1);
   border-color: #667eea;
+  box-shadow: inset 3px 0 0 #667eea;
 }
 .place-index {
   width: 22px;
@@ -385,6 +411,9 @@ onMounted(() => {
 .map-wrap {
   flex: 1;
   min-width: 0;
+}
+#travel-map {
+  border: 1px solid rgba(102, 126, 234, 0.12);
 }
 
 .travel-timeline {
@@ -439,21 +468,21 @@ onMounted(() => {
 .timeline-card {
   width: 45%;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid rgba(102, 126, 234, 0.1);
 }
 .timeline-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.14);
 }
 .card-header {
   display: flex;
   align-items: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 22px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #9f7aea 100%);
   color: #fff;
 }
 .travel-icon {
@@ -480,7 +509,7 @@ onMounted(() => {
   backdrop-filter: blur(10px);
 }
 .card-content {
-  padding: 20px;
+  padding: 22px 24px;
 }
 .travel-highlights {
   display: flex;
@@ -526,24 +555,52 @@ onMounted(() => {
   border-bottom: 1px solid #eee;
 }
 .photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
+  columns: 3 200px;
+  column-gap: 14px;
 }
 .photo-item {
-  margin: 0;
-  aspect-ratio: 4 / 3;
+  position: relative;
+  break-inside: avoid;
+  margin: 0 0 14px;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   background: #f5f5f5;
 }
+.photo-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+.photo-item::after {
+  content: '⤢';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  color: #fff;
+  font-size: 28px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.photo-item:hover::before {
+  opacity: 1;
+}
+.photo-item:hover::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 .photo-item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+  height: auto;
   display: block;
+  transition: transform 0.3s ease;
 }
 .photo-item:hover img {
   transform: scale(1.06);
