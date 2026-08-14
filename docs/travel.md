@@ -13,22 +13,6 @@ const totalPhotos = computed(() =>
 )
 const placeCount = places.length
 
-// 估算轨迹里程（球面距离，公里）
-function haversineKm(a, b) {
-  const R = 6371
-  const rad = (x) => (x * Math.PI) / 180
-  const dLat = rad(b.lat - a.lat)
-  const dLng = rad(b.lng - a.lng)
-  const h =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2
-  return 2 * R * Math.asin(Math.sqrt(h))
-}
-const routePlaces = places.filter((p) => p.route)
-const totalKm = Math.round(
-  routePlaces.reduce((sum, p, i, arr) => (i ? sum + haversineKm(arr[i - 1], p) : 0), 0)
-)
-
 // 地图与标记引用（非响应式）
 let map = null
 const markers = {}
@@ -189,37 +173,6 @@ onMounted(() => {
       })
     })
 
-    // 旅行轨迹线（按顺序连线，含方向箭头）
-    const path = routePlaces.map((p) => [p.lng, p.lat])
-    if (path.length > 1) {
-      new AMap.Polyline({
-        path,
-        strokeColor: '#667eea',
-        strokeWeight: 3,
-        strokeOpacity: 0.85,
-        strokeStyle: 'dashed',
-        strokeDasharray: [12, 8],
-        lineJoin: 'round',
-        lineCap: 'round',
-        showDir: true,
-        zIndex: 90
-      }).setMap(map)
-
-      // 轨迹回放小圆点（沿轨迹循环移动）
-      const dot = new AMap.Marker({
-        position: path[0],
-        content: '<div style="width:10px;height:10px;background:#667eea;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px #667eea;"></div>',
-        offset: new AMap.Pixel(-7, -7),
-        zIndex: 130
-      })
-      dot.setMap(map)
-      try {
-        dot.moveAlong(path, 400, undefined, true)
-      } catch (e) {
-        // 轨迹回放失败不影响主地图
-      }
-    }
-
     // 自适应视野到所有标记点
     map.setFitView(Object.values(markers))
   }
@@ -237,10 +190,6 @@ onMounted(() => {
   <div class="stat">
     <span class="stat-num">{{ totalPhotos }}</span>
     <span class="stat-label">照片</span>
-  </div>
-  <div class="stat">
-    <span class="stat-num">{{ totalKm }}</span>
-    <span class="stat-label">轨迹里程(km)</span>
   </div>
 </div>
 

@@ -1,4 +1,4 @@
-// 旅行数据：地图、轨迹、时间线、照片墙、统计共用的单一数据源。
+// 旅行数据：地图、时间线、照片墙、统计共用的单一数据源。
 // 以后新增/修改地点，只需改这一份文件。
 // 注意：date 目前是占位，请替换成真实日期。
 
@@ -7,7 +7,6 @@ export const visited = [
   '杭州市', '拉萨市', '乌鲁木齐市', '北京市', '上海市', '重庆市'
 ]
 
-// route: 是否纳入「旅行轨迹」连线（例如日本是单独一趟海外行程，设为 false 不连线）
 export const places = [
   {
     name: '北京',
@@ -17,7 +16,6 @@ export const places = [
     date: '2023年',
     icon: '🏛️',
     type: 'city',
-    route: true,
     description: '首都，历史文化名城',
     highlights: ['故宫、天安门、长城', '历史文化底蕴深厚，值得深度游览']
   },
@@ -29,7 +27,6 @@ export const places = [
     date: '2023年',
     icon: '🌆',
     type: 'city',
-    route: true,
     description: '魔都，现代化大都市',
     highlights: ['外滩、东方明珠、豫园', '现代化与历史文化的完美融合']
   },
@@ -41,7 +38,6 @@ export const places = [
     date: '2023年',
     icon: '🏞️',
     type: 'city',
-    route: true,
     description: '人间天堂，西湖美景',
     highlights: ['西湖、灵隐寺、西溪湿地', '人间天堂，风景如画']
   },
@@ -53,7 +49,6 @@ export const places = [
     date: '2023年',
     icon: '🏔️',
     type: 'city',
-    route: true,
     description: '雪域高原，布达拉宫',
     highlights: ['布达拉宫、大昭寺、八廓街', '雪域高原的神秘与神圣']
   },
@@ -65,7 +60,6 @@ export const places = [
     date: '2023年',
     icon: '⛰️',
     type: 'nature',
-    route: true,
     description: '神山，世界中心',
     highlights: ['冈仁波齐峰、玛旁雍错', '世界中心的神山，心灵净化之旅']
   },
@@ -77,7 +71,6 @@ export const places = [
     date: '2023年',
     icon: '💧',
     type: 'nature',
-    route: true,
     description: '圣湖，三大圣湖之一',
     highlights: ['玛旁雍错湖', '高原圣湖，纯净澄澈']
   },
@@ -89,7 +82,6 @@ export const places = [
     date: '2023年',
     icon: '🌊',
     type: 'nature',
-    route: true,
     description: '羊卓雍错，高原蓝宝石',
     highlights: ['羊湖、卡若拉冰川', '高原蓝宝石，纯净如镜']
   },
@@ -101,7 +93,6 @@ export const places = [
     date: '2023年',
     icon: '🌸',
     type: 'nature',
-    route: false,
     description: '樱花之国，现代与传统',
     highlights: ['东京、京都、大阪', '现代科技与传统文化的完美融合']
   },
@@ -113,7 +104,6 @@ export const places = [
     date: '2023年',
     icon: '🏜️',
     type: 'nature',
-    route: true,
     description: '大美新疆，丝路明珠',
     highlights: ['天山、吐鲁番、喀什', '大漠风光，丝路文化，美食天堂']
   }
