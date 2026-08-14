@@ -187,28 +187,23 @@ onMounted(() => {
 
 ## 我的足迹地图
 
-<div class="map-hero">
-  <div
-    id="travel-map"
-    style="width: 100%; height: 78vh; min-height: 560px;"
-  ></div>
-
-  <div class="map-stats">
-    <div class="stat">
-      <span class="stat-num">{{ placeCount }}</span>
-      <span class="stat-label">足迹</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">{{ visitedCount }}</span>
-      <span class="stat-label">点亮城市</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">{{ totalPhotos }}</span>
-      <span class="stat-label">照片</span>
-    </div>
+<div class="travel-stats">
+  <div class="stat">
+    <span class="stat-num">{{ placeCount }}</span>
+    <span class="stat-label">足迹</span>
   </div>
+  <div class="stat">
+    <span class="stat-num">{{ visitedCount }}</span>
+    <span class="stat-label">点亮城市</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">{{ totalPhotos }}</span>
+    <span class="stat-label">照片</span>
+  </div>
+</div>
 
-  <div class="map-panel">
+<div class="travel-layout">
+  <aside class="place-list">
     <div class="panel-title">📍 我的足迹</div>
     <div
       v-for="(p, i) in places"
@@ -223,6 +218,13 @@ onMounted(() => {
         <div class="place-item-meta">{{ p.date }}</div>
       </div>
     </div>
+  </aside>
+
+  <div class="map-wrap">
+    <div
+      id="travel-map"
+      style="width: 100%; height: 60vh; min-height: 480px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);"
+    ></div>
   </div>
 </div>
 
@@ -284,31 +286,26 @@ onMounted(() => {
 </div>
 
 <style scoped>
-.map-hero {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-  margin: 0 0 48px;
-}
-.map-stats {
-  position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+.travel-stats {
   display: flex;
-  gap: 10px;
-  z-index: 200;
+  justify-content: center;
+  gap: 16px;
+  margin: 24px 0 24px;
+}
+.travel-layout {
+  display: flex;
+  gap: 16px;
+  margin: 0 0 48px;
+  align-items: stretch;
 }
 .stat {
   text-align: center;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 12px;
-  padding: 12px 18px;
-  min-width: 96px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  border-radius: 16px;
+  padding: 16px 20px;
+  min-width: 100px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 .stat-num {
   display: block;
@@ -323,23 +320,19 @@ onMounted(() => {
   font-size: 12px;
   color: #8a94a6;
 }
-.map-panel {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  bottom: 16px;
-  width: 224px;
+.place-list {
+  width: 240px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 14px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  max-height: 60vh;
   overflow-y: auto;
-  z-index: 200;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid rgba(102, 126, 234, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 .panel-title {
   color: #333;
@@ -347,6 +340,7 @@ onMounted(() => {
   font-weight: 700;
   padding: 2px 4px 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 4px;
 }
 .place-item {
   display: flex;
@@ -387,6 +381,10 @@ onMounted(() => {
 .place-item-meta {
   font-size: 11px;
   color: #999;
+}
+.map-wrap {
+  flex: 1;
+  min-width: 0;
 }
 
 .travel-timeline {
@@ -552,13 +550,13 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .map-stats {
-    top: 10px;
-    gap: 6px;
+  .travel-stats {
+    gap: 8px;
   }
   .stat {
-    padding: 8px 10px;
-    min-width: 64px;
+    padding: 10px 12px;
+    min-width: 0;
+    flex: 1;
   }
   .stat-num {
     font-size: 20px;
@@ -566,12 +564,12 @@ onMounted(() => {
   .stat-label {
     font-size: 11px;
   }
-  .map-panel {
-    top: auto;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    width: auto;
+  .travel-layout {
+    flex-direction: column;
+  }
+  .place-list {
+    width: 100%;
+    max-height: 200px;
     flex-direction: row;
     overflow-x: auto;
     overflow-y: hidden;
