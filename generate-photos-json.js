@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 const baseDir = path.join(__dirname, 'docs/public/photos');
 const output = {};
-const basePrefix = '/imfineandyou'; // 与 VitePress base 保持一致
+const basePrefix = ''; // 站点部署在根路径（base 为 '/'），无需前缀
 
 function walk(dir, parents = []) {
   fs.readdirSync(dir).forEach(item => {

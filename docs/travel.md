@@ -18,7 +18,7 @@ onMounted(() => {
   script.src = 'https://webapi.amap.com/maps?v=2.0&key=2b8f301df116637eb0206846d8e5c054'
 
   // 自动加载照片索引
-  fetch('/imfineandyou/photos/photos.json')
+  fetch('/photos/photos.json')
     .then(res => res.json())
     .then(data => {
       regionPhotos = data;
@@ -45,7 +45,7 @@ onMounted(() => {
 
     // 加载GeoJSON插件后再加载市级GeoJSON并高亮去过的区域
     AMap.plugin(['AMap.GeoJSON'], function() {
-      fetch('/imfineandyou/geojson/china-cities-full.geojson')
+      fetch('/geojson/china-cities-full.geojson')
         .then(res => res.json())
         .then(geojson => {
           geojson.features.forEach(feature => {
@@ -90,12 +90,6 @@ onMounted(() => {
         description: '首都，历史文化名城',
         date: '2023年',
         icon: '🏛️',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1508697014387-db70aad34f4d?w=400&h=300&fit=crop', caption: '天安门广场' },
-          { url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=400&h=300&fit=crop', caption: '故宫角楼' },
-          { url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=400&h=300&fit=crop', caption: '长城' },
-          { url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=400&h=300&fit=crop', caption: '颐和园' }
-        ]
       },
       {
         name: '上海',
@@ -104,11 +98,6 @@ onMounted(() => {
         description: '魔都，现代化大都市',
         date: '2023年',
         icon: '🌆',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&h=300&fit=crop', caption: '外滩夜景' },
-          { url: 'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&h=300&fit=crop', caption: '东方明珠' },
-          { url: 'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&h=300&fit=crop', caption: '豫园' }
-        ]
       },
       {
         name: '杭州',
@@ -117,11 +106,6 @@ onMounted(() => {
         description: '人间天堂，西湖美景',
         date: '2023年',
         icon: '🏞️',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '西湖断桥' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '雷峰塔' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '灵隐寺' }
-        ]
       },
       {
         name: '拉萨',
@@ -130,11 +114,6 @@ onMounted(() => {
         description: '雪域高原，布达拉宫',
         date: '2023年',
         icon: '🏔️',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '布达拉宫' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '大昭寺' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '八廓街' }
-        ]
       },
       {
         name: '冈仁波齐',
@@ -143,11 +122,6 @@ onMounted(() => {
         description: '神山，世界中心',
         date: '2023年',
         icon: '⛰️',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '冈仁波齐峰' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '转山路上' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '经幡' }
-        ]
       },
       {
         name: '玛旁雍错',
@@ -156,10 +130,6 @@ onMounted(() => {
         description: '圣湖，三大圣湖之一',
         date: '2023年',
         icon: '💧',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '玛旁雍错湖' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '湖边经幡' }
-        ]
       },
       {
         name: '羊湖',
@@ -168,10 +138,6 @@ onMounted(() => {
         description: '羊卓雍错，高原蓝宝石',
         date: '2023年',
         icon: '🌊',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '羊卓雍错' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '湖边雪山' }
-        ]
       },
       {
         name: '日本',
@@ -180,11 +146,6 @@ onMounted(() => {
         description: '樱花之国，现代与传统',
         date: '2023年',
         icon: '🌸',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '东京塔' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '京都樱花' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '大阪城' }
-        ]
       },
       {
         name: '新疆',
@@ -193,11 +154,6 @@ onMounted(() => {
         description: '大美新疆，丝路明珠',
         date: '2023年',
         icon: '🏜️',
-        photos: [
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560&h=1440&fit=crop', caption: '天山天池' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', caption: '吐鲁番葡萄' },
-          { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1080&h=1080&fit=crop', caption: '喀什古城' }
-        ]
       }
     ]
 
@@ -206,7 +162,7 @@ onMounted(() => {
       const marker = new AMap.Marker({
         position: [place.lng, place.lat],
         icon: new AMap.Icon({
-          image: '/imfineandyou/location.png',
+          image: '/location.png',
           size: new AMap.Size(20, 20),
           imageSize: new AMap.Size(20, 20)
         }),
@@ -336,7 +292,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>北京之旅</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 北京</span>
           </div>
         </div>
@@ -366,7 +322,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>上海之行</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 上海</span>
           </div>
         </div>
@@ -396,7 +352,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>杭州游</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 杭州</span>
           </div>
         </div>
@@ -426,7 +382,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>西藏之旅</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 拉萨</span>
           </div>
         </div>
@@ -456,7 +412,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>冈仁波齐转山</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 冈仁波齐</span>
           </div>
         </div>
@@ -486,7 +442,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>羊卓雍错</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 羊湖</span>
           </div>
         </div>
@@ -516,7 +472,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>日本之旅</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 日本</span>
           </div>
         </div>
@@ -546,7 +502,7 @@ onMounted(() => {
         <div class="travel-info">
           <h3>新疆之行</h3>
           <div class="travel-meta">
-            <span class="travel-date">2023年X月</span>
+            <span class="travel-date">2023年</span>
             <span class="travel-location">📍 新疆</span>
           </div>
         </div>

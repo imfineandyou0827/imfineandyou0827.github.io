@@ -1,1 +1,0 @@
-import{_ as a,c as t,o,ae as r}from"./chunks/framework.sippFj2z.js";const m=JSON.parse('{"title":"笔记","description":"","frontmatter":{},"headers":[],"relativePath":"notes.md","filePath":"notes.md"}'),n={name:"notes.md"};function s(l,e,c,i,_,d){return o(),t("div",null,e[0]||(e[0]=[r("",5)]))}const p=a(n,[["render",s]]);export{m as __pageData,p as default};

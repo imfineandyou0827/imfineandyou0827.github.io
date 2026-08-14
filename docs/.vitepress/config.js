@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  base: '/imfineandyou/',
+  base: '/',
   title: '姚杰的博客',
   description: '说说我的生活',
   themeConfig: {
