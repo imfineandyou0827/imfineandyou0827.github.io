@@ -1,3 +1,8 @@
+---
+aside: false
+outline: false
+---
+
 # 旅程
 
 <p class="page-tagline">记录我的旅行与见闻。</p>
@@ -684,6 +689,10 @@ onMounted(() => {
 
 <style>
 /* 灯箱弹窗挂在 body 上，需全局样式 */
+/* 旅程页使用全宽布局（去侧栏/目录后内容更宽） */
+.content-container {
+  max-width: 1080px !important;
+}
 .gallery-modal {
   position: fixed;
   inset: 0;
