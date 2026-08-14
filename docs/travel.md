@@ -260,6 +260,21 @@ onMounted(() => {
             <span class="highlight-value">{{ p.highlights[1] }}</span>
           </div>
         </div>
+        <div v-if="regionPhotos[p.name] && regionPhotos[p.name].length" class="card-photos">
+          <img
+            v-for="(ph, pi) in regionPhotos[p.name].slice(0, 3)"
+            :key="pi"
+            :src="ph.url"
+            :alt="p.name"
+            class="card-photo"
+            @click.stop="showPhotoGallery(p.name, pi)"
+          >
+          <button
+            v-if="regionPhotos[p.name].length > 3"
+            class="card-photos-more"
+            @click.stop="showPhotoGallery(p.name, 0)"
+          >+{{ regionPhotos[p.name].length - 3 }}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -270,7 +285,7 @@ onMounted(() => {
 <div class="photo-wall" v-if="hasPhotos">
   <template v-for="p in places" :key="'photos-' + p.name">
     <div class="photo-section" v-if="regionPhotos[p.name] && regionPhotos[p.name].length">
-      <h3 class="photo-title">{{ p.icon }} {{ p.name }}</h3>
+      <h3 class="photo-title">{{ p.icon }} {{ p.name }} <span class="photo-count">{{ regionPhotos[p.name].length }} 张</span></h3>
       <div class="photo-grid">
         <figure
           v-for="(photo, idx) in regionPhotos[p.name]"
@@ -537,6 +552,36 @@ h2::before {
   line-height: 1.6;
   font-size: 14px;
 }
+.card-photos {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.card-photo {
+  width: 72px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.card-photo:hover {
+  transform: scale(1.05);
+}
+.card-photos-more {
+  width: 72px;
+  height: 54px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.card-photos-more:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
 
 .photo-wall {
   margin: 40px auto;
@@ -553,6 +598,12 @@ h2::before {
   margin: 0 0 16px;
   padding-bottom: 8px;
   border-bottom: 1px solid #eee;
+}
+.photo-count {
+  font-size: 13px;
+  font-weight: 500;
+  color: #8a94a6;
+  margin-left: 8px;
 }
 .photo-grid {
   columns: 3 200px;
