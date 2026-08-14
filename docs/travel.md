@@ -25,10 +25,10 @@ onMounted(() => {
     });
 
   script.onload = () => {
-    // 初始化地图，缩放级别调高
+    // 初始化地图（初始先覆盖全国，随后自适应到所有标记点）
     const map = new AMap.Map('travel-map', {
-      zoom: 7,
-      center: [91.1322, 29.6604], // 西藏拉萨附近
+      zoom: 4,
+      center: [104, 36], // 中国中部
       mapStyle: 'amap://styles/whitesmoke',
       features: ['bg', 'road', 'building', 'point']
     })
@@ -158,6 +158,7 @@ onMounted(() => {
     ]
 
     // 添加标记点
+    const markers = []
     places.forEach(place => {
       const marker = new AMap.Marker({
         position: [place.lng, place.lat],
@@ -197,6 +198,11 @@ onMounted(() => {
         infoWindow.open(map, marker.getPosition());
       });
     });
+
+    // 自适应视野，让所有标记点都在视野内
+    if (markers.length) {
+      map.setFitView(markers)
+    }
 
     // 添加图例
     const legend = document.createElement('div')
@@ -275,6 +281,7 @@ onMounted(() => {
 
 <style scoped>
 #travel-map {
+  position: relative;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 </style>
