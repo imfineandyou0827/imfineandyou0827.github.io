@@ -1,6 +1,5 @@
 ---
-aside: false
-outline: false
+layout: false
 ---
 
 # 旅程
@@ -15,9 +14,6 @@ import { places, visited } from './travel-data'
 const regionPhotos = ref({})
 const totalPhotos = computed(() =>
   Object.values(regionPhotos.value).reduce((n, arr) => n + arr.length, 0)
-)
-const hasPhotos = computed(() =>
-  Object.values(regionPhotos.value).some((arr) => arr.length)
 )
 const placeCount = places.length
 const visitedCount = visited.length
@@ -235,74 +231,44 @@ onMounted(() => {
 
 ## 旅行记录
 
-<div class="travel-timeline">
-  <div
+<div class="trips">
+  <article
     v-for="(p, i) in places"
     :key="p.name"
-    class="timeline-item"
-    :class="{ even: i % 2 === 1 }"
+    class="trip"
   >
-    <div class="timeline-dot"><div class="dot-inner"></div></div>
-    <div class="timeline-card">
-      <div class="card-header">
-        <div class="travel-icon">{{ p.icon }}</div>
-        <div class="travel-info">
-          <h3>{{ p.title }}</h3>
-          <div class="travel-meta">
-            <span class="travel-date">{{ p.date }}</span>
-            <span class="travel-location">📍 {{ p.name }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-content">
-        <div class="travel-highlights">
-          <div class="highlight-item">
-            <span class="highlight-label">景点</span>
-            <span class="highlight-value">{{ p.highlights[0] }}</span>
-          </div>
-          <div class="highlight-item">
-            <span class="highlight-label">感受</span>
-            <span class="highlight-value">{{ p.highlights[1] }}</span>
-          </div>
-        </div>
-        <div v-if="regionPhotos[p.name] && regionPhotos[p.name].length" class="card-photos">
-          <img
-            v-for="(ph, pi) in regionPhotos[p.name].slice(0, 3)"
-            :key="pi"
-            :src="ph.url"
-            :alt="p.name"
-            class="card-photo"
-            @click.stop="showPhotoGallery(p.name, pi)"
-          >
-          <button
-            v-if="regionPhotos[p.name].length > 3"
-            class="card-photos-more"
-            @click.stop="showPhotoGallery(p.name, 0)"
-          >+{{ regionPhotos[p.name].length - 3 }}</button>
+    <div class="trip-head">
+      <span class="trip-index">{{ i + 1 }}</span>
+      <span class="trip-icon">{{ p.icon }}</span>
+      <div class="trip-info">
+        <h3 class="trip-title">{{ p.title }}</h3>
+        <div class="trip-meta">
+          <span class="pill">{{ p.date }}</span>
+          <span class="loc">📍 {{ p.name }}</span>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-## 照片墙
-
-<div class="photo-wall" v-if="hasPhotos">
-  <template v-for="p in places" :key="'photos-' + p.name">
-    <div class="photo-section" v-if="regionPhotos[p.name] && regionPhotos[p.name].length">
-      <h3 class="photo-title">{{ p.icon }} {{ p.name }} <span class="photo-count">{{ regionPhotos[p.name].length }} 张</span></h3>
-      <div class="photo-grid">
-        <figure
-          v-for="(photo, idx) in regionPhotos[p.name]"
-          :key="idx"
-          class="photo-item"
-          @click="showPhotoGallery(p.name, idx)"
-        >
-          <img :src="photo.url" :alt="photo.caption || p.name" loading="lazy">
-        </figure>
+    <div class="trip-body">
+      <div class="hl">
+        <span class="hl-label">景点</span>
+        <span class="hl-value">{{ p.highlights[0] }}</span>
+      </div>
+      <div class="hl">
+        <span class="hl-label">感受</span>
+        <span class="hl-value">{{ p.highlights[1] }}</span>
       </div>
     </div>
-  </template>
+    <div v-if="regionPhotos[p.name] && regionPhotos[p.name].length" class="trip-photos">
+      <img
+        v-for="(ph, pi) in regionPhotos[p.name]"
+        :key="pi"
+        :src="ph.url"
+        :alt="p.name"
+        loading="lazy"
+        @click="showPhotoGallery(p.name, pi)"
+      >
+    </div>
+  </article>
 </div>
 
 <style scoped>
@@ -310,6 +276,30 @@ onMounted(() => {
   font-size: 16px;
   color: #8a94a6;
   margin: 8px 0 8px;
+  text-align: center;
+}
+h1 {
+  font-family: Georgia, 'Noto Serif SC', 'Songti SC', serif;
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: 56px 0 4px;
+}
+h2 {
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+  margin: 48px 0 28px;
+}
+h2::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 3px;
+  background: #667eea;
+  border-radius: 2px;
+  margin: 12px auto 0;
 }
 .travel-stats {
   display: flex;
@@ -320,7 +310,8 @@ onMounted(() => {
 .travel-layout {
   display: flex;
   gap: 16px;
-  margin: 0 0 48px;
+  max-width: 1080px;
+  margin: 0 auto 48px;
   align-items: stretch;
 }
 .stat {
@@ -422,220 +413,106 @@ onMounted(() => {
   border: 1px solid rgba(102, 126, 234, 0.12);
 }
 
-.travel-timeline {
-  position: relative;
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-.travel-timeline::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #e5e7eb;
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
-.timeline-item {
-  position: relative;
-  margin-bottom: 40px;
+.trips {
+  max-width: 720px;
+  margin: 0 auto;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 24px;
 }
-.timeline-item.even {
-  flex-direction: row-reverse;
-}
-.timeline-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  background: #667eea;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  z-index: 10;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.18);
-}
-.dot-inner {
-  display: none;
-}
-.timeline-card {
-  width: 45%;
+.trip {
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
   border: 1px solid #eef0f3;
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+  padding: 24px 28px;
 }
-.timeline-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
-}
-.card-header {
+.trip-head {
   display: flex;
   align-items: center;
-  padding: 22px 24px 0;
-  background: none;
+  gap: 14px;
 }
-.travel-icon {
+.trip-index {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  line-height: 26px;
+  text-align: center;
+  background: #667eea;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+}
+.trip-icon {
   font-size: 28px;
-  margin-right: 14px;
 }
-.travel-info h3 {
-  margin: 0 0 6px;
-  font-size: 21px;
+.trip-info {
+  flex: 1;
+  min-width: 0;
+}
+.trip-title {
+  margin: 0 0 4px;
+  font-size: 20px;
   font-weight: 700;
   color: #1f2937;
 }
-.travel-meta {
+.trip-meta {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
   font-size: 13px;
   color: #9aa3b2;
 }
-.travel-date {
+.pill {
   background: #f3f4f6;
   color: #6b7280;
   padding: 3px 10px;
   border-radius: 999px;
 }
-.card-content {
-  padding: 22px 24px;
+.trip-body {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f2f5;
 }
-.travel-highlights {
+.hl {
   display: flex;
-  flex-direction: column;
   gap: 12px;
+  margin-bottom: 8px;
 }
-.highlight-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+.hl:last-child {
+  margin-bottom: 0;
 }
-.highlight-label {
+.hl-label {
   min-width: 44px;
   font-weight: 500;
   color: #9aa3b2;
   font-size: 12px;
-  padding: 2px 0;
-  background: none;
-  text-align: left;
+  padding-top: 2px;
 }
-.highlight-value {
+.hl-value {
   flex: 1;
+  font-size: 14px;
   color: #4a5568;
   line-height: 1.7;
-  font-size: 14px;
 }
-.card-photos {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
+.trip-photos {
+  margin-top: 18px;
+  columns: 3 160px;
+  column-gap: 12px;
 }
-.card-photo {
-  width: 72px;
-  height: 54px;
-  object-fit: cover;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-.card-photo:hover {
-  transform: scale(1.05);
-}
-.card-photos-more {
-  width: 72px;
-  height: 54px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.card-photos-more:hover {
-  background: rgba(102, 126, 234, 0.2);
-}
-
-.photo-wall {
-  margin: 40px auto;
-  max-width: 900px;
-}
-.photo-section {
-  margin: 0 0 32px;
-}
-.photo-section:last-child {
-  margin-bottom: 0;
-}
-.photo-title {
-  font-size: 19px;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 14px;
-}
-.photo-count {
-  font-size: 13px;
-  font-weight: 400;
-  color: #9aa3b2;
-  margin-left: 8px;
-}
-.photo-grid {
-  columns: 3 200px;
-  column-gap: 14px;
-}
-.photo-item {
-  position: relative;
-  break-inside: avoid;
-  margin: 0 0 14px;
-  overflow: hidden;
-  border-radius: 14px;
-  cursor: pointer;
-  background: #f5f5f5;
-}
-.photo-item::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
-}
-.photo-item::after {
-  content: '⤢';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  color: #fff;
-  font-size: 28px;
-  opacity: 0;
-  transition: all 0.3s ease;
-  z-index: 2;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-.photo-item:hover::before {
-  opacity: 1;
-}
-.photo-item:hover::after {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.photo-item img {
+.trip-photos img {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform 0.3s ease;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  break-inside: avoid;
+  transition: transform 0.25s ease;
 }
-.photo-item:hover img {
-  transform: scale(1.06);
+.trip-photos img:hover {
+  transform: scale(1.03);
 }
 
 @media (max-width: 768px) {
@@ -670,28 +547,26 @@ onMounted(() => {
     min-width: 132px;
     flex-shrink: 0;
   }
-  .travel-timeline::before {
-    left: 30px;
+  h1 {
+    font-size: 36px;
   }
-  .timeline-item,
-  .timeline-item.even {
-    flex-direction: row;
+  .trip {
+    padding: 20px;
   }
-  .timeline-dot {
-    left: 30px;
-  }
-  .timeline-card {
-    width: calc(100% - 60px);
-    margin-left: 60px;
+  .trip-photos {
+    columns: 2 140px;
   }
 }
 </style>
 
 <style>
 /* 灯箱弹窗挂在 body 上，需全局样式 */
-/* 旅程页使用全宽布局（去侧栏/目录后内容更宽） */
-.content-container {
-  max-width: 1080px !important;
+body {
+  margin: 0;
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  color: #1f2937;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
 }
 .gallery-modal {
   position: fixed;
