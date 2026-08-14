@@ -50,7 +50,10 @@ onMounted(() => {
         .then(geojson => {
           geojson.features.forEach(feature => {
             const name = feature.properties.name;
+            const level = feature.properties.level;
             const isVisited = visited.includes(name);
+            // 未访问的市级区域跳过，只保留省级轮廓与已访问区域，大幅减少多边形数量
+            if (!isVisited && level === 'city') return;
             const coords = feature.geometry.coordinates;
             if (feature.geometry.type === 'MultiPolygon') {
               coords.forEach(subPath => {

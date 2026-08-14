@@ -20,8 +20,10 @@ function walk(dir, parents = []) {
       // 取最后一级目录作为地名
       const place = parents[parents.length - 1];
       if (!output[place]) output[place] = [];
+      // 对路径各段做 URL 编码，避免中文、空格、&、=、@ 等字符破坏链接
+      const segments = [...parents, item].map(encodeURIComponent);
       output[place].push({
-        url: `${basePrefix}/photos/${parents.join('/')}/${item}`,
+        url: `${basePrefix}/photos/${segments.join('/')}`,
         caption: place
       });
     }
