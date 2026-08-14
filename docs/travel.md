@@ -306,20 +306,6 @@ onMounted(() => {
   color: #8a94a6;
   margin: 8px 0 8px;
 }
-h2 {
-  position: relative;
-  padding-left: 16px;
-}
-h2::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 6px;
-  bottom: 6px;
-  width: 4px;
-  background: linear-gradient(180deg, #667eea, #f093fb);
-  border-radius: 2px;
-}
 .travel-stats {
   display: flex;
   justify-content: center;
@@ -443,8 +429,8 @@ h2::before {
   left: 50%;
   top: 0;
   bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+  width: 2px;
+  background: #e5e7eb;
   transform: translateX(-50%);
   border-radius: 2px;
 }
@@ -462,66 +448,57 @@ h2::before {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  border: 4px solid #667eea;
+  width: 12px;
+  height: 12px;
+  background: #667eea;
+  border: 2px solid #fff;
   border-radius: 50%;
   z-index: 10;
-  box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.18);
 }
 .dot-inner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
-  background: #667eea;
-  border-radius: 50%;
+  display: none;
 }
 .timeline-card {
   width: 45%;
   background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  border: 1px solid #eef0f3;
 }
 .timeline-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.14);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
 }
 .card-header {
   display: flex;
   align-items: center;
-  padding: 22px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #9f7aea 100%);
-  color: #fff;
+  padding: 22px 24px 0;
+  background: none;
 }
 .travel-icon {
-  font-size: 32px;
-  margin-right: 16px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  font-size: 28px;
+  margin-right: 14px;
 }
 .travel-info h3 {
-  margin: 0 0 8px;
-  font-size: 20px;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin: 0 0 6px;
+  font-size: 21px;
+  font-weight: 700;
+  color: #1f2937;
 }
 .travel-meta {
   display: flex;
   gap: 12px;
-  font-size: 14px;
-  opacity: 0.9;
+  font-size: 13px;
+  color: #9aa3b2;
 }
 .travel-date {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 4px 8px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  background: #f3f4f6;
+  color: #6b7280;
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 .card-content {
   padding: 22px 24px;
@@ -537,19 +514,18 @@ h2::before {
   gap: 12px;
 }
 .highlight-label {
-  min-width: 60px;
-  font-weight: 600;
-  color: #667eea;
-  font-size: 14px;
-  padding: 4px 8px;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 8px;
-  text-align: center;
+  min-width: 44px;
+  font-weight: 500;
+  color: #9aa3b2;
+  font-size: 12px;
+  padding: 2px 0;
+  background: none;
+  text-align: left;
 }
 .highlight-value {
   flex: 1;
   color: #4a5568;
-  line-height: 1.6;
+  line-height: 1.7;
   font-size: 14px;
 }
 .card-photos {
@@ -594,15 +570,15 @@ h2::before {
   margin-bottom: 0;
 }
 .photo-title {
-  font-size: 20px;
-  margin: 0 0 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
+  font-size: 19px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 14px;
 }
 .photo-count {
   font-size: 13px;
-  font-weight: 500;
-  color: #8a94a6;
+  font-weight: 400;
+  color: #9aa3b2;
   margin-left: 8px;
 }
 .photo-grid {
