@@ -102,14 +102,14 @@ onMounted(() => {
     map = new AMap.Map('travel-map', {
       zoom: 4,
       center: [104, 36],
-      mapStyle: 'amap://styles/darkblue',
+      mapStyle: 'amap://styles/whitesmoke',
       features: ['bg', 'road', 'building', 'point']
     })
 
-    // 打卡地图配色：去过的城市用金色点亮，其余省份用暗色淡轮廓
-    const highlightStroke = '#ffd166'
-    const highlightFill = '#ffd166'
-    const normalStroke = '#3a4a5f'
+    // 浅色地图配色：去过的城市用绿色高亮，其余省份用淡蓝灰轮廓
+    const highlightStroke = '#7ed6a7'
+    const highlightFill = '#e6f7ec'
+    const normalStroke = '#b3c6e0'
 
     // 中国轮廓 + 高亮去过的城市（跳过未访问的市级区域，减少多边形数量）
     AMap.plugin(['AMap.GeoJSON'], function () {
@@ -125,9 +125,9 @@ onMounted(() => {
             const opts = (path) => ({
               path,
               strokeColor: isVisited ? highlightStroke : normalStroke,
-              fillColor: isVisited ? highlightFill : '#000000',
-              fillOpacity: isVisited ? 0.5 : 0,
-              strokeWeight: isVisited ? 2 : 1,
+              fillColor: isVisited ? highlightFill : '#ffffff',
+              fillOpacity: isVisited ? 0.6 : 0,
+              strokeWeight: 1.5,
               zIndex: 100,
               extData: { name }
             })
@@ -140,17 +140,15 @@ onMounted(() => {
         })
     })
 
-    // 标记点（发光圆点 + 城市名）
-    places.forEach((p) => {
+    // 标记点（带旅行顺序编号）
+    const cityColor = '#667eea'
+    const natureColor = '#34c3a0'
+    places.forEach((p, i) => {
+      const color = p.type === 'city' ? cityColor : natureColor
       const marker = new AMap.Marker({
         position: [p.lng, p.lat],
-        content: `
-          <div style="width:80px;text-align:center;">
-            <div style="width:12px;height:12px;background:#ffd166;border-radius:50%;border:2px solid #fff;box-shadow:0 0 10px #ffd166,0 0 22px rgba(255,209,102,.65);margin:0 auto;"></div>
-            <div style="margin-top:4px;color:#fff;font-size:12px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.9);white-space:nowrap;">${p.name}</div>
-          </div>
-        `,
-        offset: new AMap.Pixel(-40, -8),
+        content: `<div style="width:26px;height:26px;line-height:22px;text-align:center;background:${color};color:#fff;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35);font-size:13px;font-weight:700;cursor:pointer;">${i + 1}</div>`,
+        offset: new AMap.Pixel(-13, -13),
         zIndex: 110
       })
       marker.setMap(map)
@@ -290,7 +288,7 @@ onMounted(() => {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
   margin: 0 0 48px;
 }
 .map-stats {
@@ -304,25 +302,26 @@ onMounted(() => {
 }
 .stat {
   text-align: center;
-  background: rgba(15, 22, 34, 0.72);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 12px;
   padding: 12px 18px;
   min-width: 96px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 .stat-num {
   display: block;
   font-size: 26px;
   font-weight: 700;
-  color: #ffd166;
+  color: #667eea;
   line-height: 1;
 }
 .stat-label {
   display: block;
   margin-top: 6px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
+  color: #8a94a6;
 }
 .map-panel {
   position: absolute;
@@ -334,38 +333,39 @@ onMounted(() => {
   flex-direction: column;
   gap: 8px;
   padding: 12px;
-  background: rgba(15, 22, 34, 0.72);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   z-index: 200;
 }
 .panel-title {
-  color: #fff;
+  color: #333;
   font-size: 14px;
   font-weight: 700;
   padding: 2px 4px 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 .place-item {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 9px 10px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid transparent;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .place-item:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 209, 102, 0.5);
+  background: rgba(102, 126, 234, 0.06);
+  border-color: rgba(102, 126, 234, 0.3);
 }
 .place-item.active {
-  background: rgba(255, 209, 102, 0.16);
-  border-color: #ffd166;
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
 }
 .place-index {
   width: 22px;
@@ -373,8 +373,8 @@ onMounted(() => {
   flex-shrink: 0;
   line-height: 22px;
   text-align: center;
-  background: #ffd166;
-  color: #1a1a1a;
+  background: #667eea;
+  color: #fff;
   border-radius: 50%;
   font-size: 11px;
   font-weight: 700;
@@ -382,21 +382,18 @@ onMounted(() => {
 .place-item-title {
   font-size: 14px;
   font-weight: 600;
-  color: #fff;
+  color: #333;
 }
 .place-item-meta {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.55);
+  color: #999;
 }
 
 .travel-timeline {
   position: relative;
   max-width: 900px;
   margin: 40px auto;
-  padding: 40px 16px;
-  background: #10151e;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0 20px;
 }
 .travel-timeline::before {
   content: '';
@@ -405,7 +402,7 @@ onMounted(() => {
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, #ffd166 0%, rgba(255, 209, 102, 0.3) 50%, #667eea 100%);
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
   transform: translateX(-50%);
   border-radius: 2px;
 }
@@ -425,11 +422,11 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   width: 20px;
   height: 20px;
-  background: #10151e;
-  border: 3px solid #ffd166;
+  background: #fff;
+  border: 4px solid #667eea;
   border-radius: 50%;
   z-index: 10;
-  box-shadow: 0 0 0 6px rgba(255, 209, 102, 0.12);
+  box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.1);
 }
 .dot-inner {
   position: absolute;
@@ -438,27 +435,27 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   width: 8px;
   height: 8px;
-  background: #ffd166;
+  background: #667eea;
   border-radius: 50%;
 }
 .timeline-card {
   width: 45%;
-  background: #1a2230;
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
 }
 .timeline-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 .card-header {
   display: flex;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, rgba(255, 209, 102, 0.16), rgba(102, 126, 234, 0.12));
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
 }
 .travel-icon {
@@ -470,18 +467,19 @@ onMounted(() => {
   margin: 0 0 8px;
   font-size: 20px;
   font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 .travel-meta {
   display: flex;
   gap: 12px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  opacity: 0.9;
 }
 .travel-date {
-  background: rgba(255, 209, 102, 0.18);
-  color: #ffd166;
+  background: rgba(255, 255, 255, 0.2);
   padding: 4px 8px;
   border-radius: 12px;
+  backdrop-filter: blur(10px);
 }
 .card-content {
   padding: 20px;
@@ -499,16 +497,16 @@ onMounted(() => {
 .highlight-label {
   min-width: 60px;
   font-weight: 600;
-  color: #ffd166;
-  font-size: 13px;
+  color: #667eea;
+  font-size: 14px;
   padding: 4px 8px;
-  background: rgba(255, 209, 102, 0.1);
+  background: rgba(102, 126, 234, 0.1);
   border-radius: 8px;
   text-align: center;
 }
 .highlight-value {
   flex: 1;
-  color: #c3cad6;
+  color: #4a5568;
   line-height: 1.6;
   font-size: 14px;
 }
@@ -516,13 +514,9 @@ onMounted(() => {
 .photo-wall {
   margin: 40px auto;
   max-width: 900px;
-  background: #10151e;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 24px;
 }
 .photo-section {
-  margin: 0 0 28px;
+  margin: 0 0 32px;
 }
 .photo-section:last-child {
   margin-bottom: 0;
@@ -531,8 +525,7 @@ onMounted(() => {
   font-size: 20px;
   margin: 0 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: #e6e9ef;
+  border-bottom: 1px solid #eee;
 }
 .photo-grid {
   display: grid;
@@ -545,7 +538,7 @@ onMounted(() => {
   overflow: hidden;
   border-radius: 12px;
   cursor: pointer;
-  background: #1a2230;
+  background: #f5f5f5;
 }
 .photo-item img {
   width: 100%;
