@@ -11,6 +11,9 @@ const regionPhotos = ref({})
 const totalPhotos = computed(() =>
   Object.values(regionPhotos.value).reduce((n, arr) => n + arr.length, 0)
 )
+const hasPhotos = computed(() =>
+  Object.values(regionPhotos.value).some((arr) => arr.length)
+)
 const placeCount = places.length
 const visitedCount = visited.length
 
@@ -264,21 +267,23 @@ onMounted(() => {
 
 ## 照片墙
 
-<template v-for="p in places" :key="'photos-' + p.name">
-  <div class="photo-section" v-if="regionPhotos[p.name] && regionPhotos[p.name].length">
-    <h3 class="photo-title">{{ p.icon }} {{ p.name }}</h3>
-    <div class="photo-grid">
-      <figure
-        v-for="(photo, idx) in regionPhotos[p.name]"
-        :key="idx"
-        class="photo-item"
-        @click="showPhotoGallery(p.name, idx)"
-      >
-        <img :src="photo.url" :alt="photo.caption || p.name" loading="lazy">
-      </figure>
+<div class="photo-wall" v-if="hasPhotos">
+  <template v-for="p in places" :key="'photos-' + p.name">
+    <div class="photo-section" v-if="regionPhotos[p.name] && regionPhotos[p.name].length">
+      <h3 class="photo-title">{{ p.icon }} {{ p.name }}</h3>
+      <div class="photo-grid">
+        <figure
+          v-for="(photo, idx) in regionPhotos[p.name]"
+          :key="idx"
+          class="photo-item"
+          @click="showPhotoGallery(p.name, idx)"
+        >
+          <img :src="photo.url" :alt="photo.caption || p.name" loading="lazy">
+        </figure>
+      </div>
     </div>
-  </div>
-</template>
+  </template>
+</div>
 
 <style scoped>
 .map-hero {
@@ -388,7 +393,10 @@ onMounted(() => {
   position: relative;
   max-width: 900px;
   margin: 40px auto;
-  padding: 0 20px;
+  padding: 40px 16px;
+  background: #10151e;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 .travel-timeline::before {
   content: '';
@@ -397,7 +405,7 @@ onMounted(() => {
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+  background: linear-gradient(180deg, #ffd166 0%, rgba(255, 209, 102, 0.3) 50%, #667eea 100%);
   transform: translateX(-50%);
   border-radius: 2px;
 }
@@ -417,11 +425,11 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   width: 20px;
   height: 20px;
-  background: #fff;
-  border: 4px solid #667eea;
+  background: #10151e;
+  border: 3px solid #ffd166;
   border-radius: 50%;
   z-index: 10;
-  box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 6px rgba(255, 209, 102, 0.12);
 }
 .dot-inner {
   position: absolute;
@@ -430,27 +438,27 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   width: 8px;
   height: 8px;
-  background: #667eea;
+  background: #ffd166;
   border-radius: 50%;
 }
 .timeline-card {
   width: 45%;
-  background: #fff;
+  background: #1a2230;
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .timeline-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
 }
 .card-header {
   display: flex;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.16), rgba(102, 126, 234, 0.12));
   color: #fff;
 }
 .travel-icon {
@@ -462,19 +470,18 @@ onMounted(() => {
   margin: 0 0 8px;
   font-size: 20px;
   font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 .travel-meta {
   display: flex;
   gap: 12px;
   font-size: 14px;
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.85);
 }
 .travel-date {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 209, 102, 0.18);
+  color: #ffd166;
   padding: 4px 8px;
   border-radius: 12px;
-  backdrop-filter: blur(10px);
 }
 .card-content {
   padding: 20px;
@@ -492,28 +499,40 @@ onMounted(() => {
 .highlight-label {
   min-width: 60px;
   font-weight: 600;
-  color: #667eea;
-  font-size: 14px;
+  color: #ffd166;
+  font-size: 13px;
   padding: 4px 8px;
-  background: rgba(102, 126, 234, 0.1);
+  background: rgba(255, 209, 102, 0.1);
   border-radius: 8px;
   text-align: center;
 }
 .highlight-value {
   flex: 1;
-  color: #4a5568;
+  color: #c3cad6;
   line-height: 1.6;
   font-size: 14px;
 }
 
+.photo-wall {
+  margin: 40px auto;
+  max-width: 900px;
+  background: #10151e;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 24px;
+}
 .photo-section {
-  margin: 32px 0;
+  margin: 0 0 28px;
+}
+.photo-section:last-child {
+  margin-bottom: 0;
 }
 .photo-title {
   font-size: 20px;
   margin: 0 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e6e9ef;
 }
 .photo-grid {
   display: grid;
@@ -526,7 +545,7 @@ onMounted(() => {
   overflow: hidden;
   border-radius: 12px;
   cursor: pointer;
-  background: #f5f5f5;
+  background: #1a2230;
 }
 .photo-item img {
   width: 100%;
