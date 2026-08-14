@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>C++设计模式笔记——CRTP | 姚杰的博客</title>
+    <meta name="description" content="说说我的生活">
+    <meta name="generator" content="VitePress v1.6.3">
+    <link rel="preload stylesheet" href="/assets/style.0KddSRAd.css" as="style">
+    <link rel="preload stylesheet" href="/vp-icons.css" as="style">
+    
+    <script type="module" src="/assets/app.CiF8siPd.js"></script>
+    <link rel="preload" href="/assets/inter-roman-latin.Di8DUHzh.woff2" as="font" type="font/woff2" crossorigin="">
+    <link rel="modulepreload" href="/assets/chunks/theme.DeHjOyA3.js">
+    <link rel="modulepreload" href="/assets/chunks/framework.Dgg8-8ov.js">
+    <link rel="modulepreload" href="/assets/notes_c__设计模式笔记_C__设计模式笔记——CRTP.md.CFRneO5d.lean.js">
+    <script id="check-dark-mode">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"auto",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
+    <script id="check-mac-os">document.documentElement.classList.toggle("mac",/Mac|iPhone|iPod|iPad/i.test(navigator.platform));</script>
+  </head>
+  <body>
+    <div id="app"><div class="Layout" data-v-f6d2c060><!--[--><!--]--><!--[--><span tabindex="-1" data-v-6d002d75></span><a href="#VPContent" class="VPSkipLink visually-hidden" data-v-6d002d75>Skip to content</a><!--]--><!----><header class="VPNav" data-v-f6d2c060 data-v-a694947e><div class="VPNavBar" data-v-a694947e data-v-b48d238c><div class="wrapper" data-v-b48d238c><div class="container" data-v-b48d238c><div class="title" data-v-b48d238c><div class="VPNavBarTitle" data-v-b48d238c data-v-b8f1cf4e><a class="title" href="/" data-v-b8f1cf4e><!--[--><!--]--><!--[--><img class="VPImage logo" src="/logo.png" alt data-v-746ca7b1><!--]--><span data-v-b8f1cf4e>姚杰的博客</span><!--[--><!--]--></a></div></div><div class="content" data-v-b48d238c><div class="content-body" data-v-b48d238c><!--[--><!--]--><div class="VPNavBarSearch search" data-v-b48d238c><!----></div><nav aria-labelledby="main-nav-aria-label" class="VPNavBarMenu menu" data-v-b48d238c data-v-8104aec6><span id="main-nav-aria-label" class="visually-hidden" data-v-8104aec6> Main Navigation </span><!--[--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>首页</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/archive.html" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>归档</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/tags.html" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>标签</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/notes.html" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>笔记</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/life.html" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>生活</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/travel.html" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>旅程</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/friend.html" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>友链</span><!--]--></a><!--]--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/tools.html" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>工具箱</span><!--]--></a><!--]--><!--[--><a class="VPLink link vp-external-link-icon VPNavBarMenuLink" href="https://github.com/imfineandyou0827" target="_blank" rel="noreferrer" tabindex="0" data-v-8104aec6 data-v-1ee66492><!--[--><span data-v-1ee66492>GitHub</span><!--]--></a><!--]--><!--]--></nav><!----><div class="VPNavBarAppearance appearance" data-v-b48d238c data-v-af1fdc9d><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-af1fdc9d data-v-e849151b data-v-3dd0942c><span class="check" data-v-3dd0942c><span class="icon" data-v-3dd0942c><!--[--><span class="vpi-sun sun" data-v-e849151b></span><span class="vpi-moon moon" data-v-e849151b></span><!--]--></span></span></button></div><div class="VPSocialLinks VPNavBarSocialLinks social-links" data-v-b48d238c data-v-be3f575b data-v-d48d24d3><!--[--><a class="VPSocialLink no-icon" href="https://github.com/imfineandyou0827" aria-label="github" target="_blank" rel="noopener" data-v-d48d24d3 data-v-bd0b0947><span class="vpi-social-github"></span></a><!--]--></div><div class="VPFlyout VPNavBarExtra extra" data-v-b48d238c data-v-caf237e9 data-v-a724372c><button type="button" class="button" aria-haspopup="true" aria-expanded="false" aria-label="extra navigation" data-v-a724372c><span class="vpi-more-horizontal icon" data-v-a724372c></span></button><div class="menu" data-v-a724372c><div class="VPMenu" data-v-a724372c data-v-e7077754><!----><!--[--><!--[--><!----><div class="group" data-v-caf237e9><div class="item appearance" data-v-caf237e9><p class="label" data-v-caf237e9>Appearance</p><div class="appearance-action" data-v-caf237e9><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-caf237e9 data-v-e849151b data-v-3dd0942c><span class="check" data-v-3dd0942c><span class="icon" data-v-3dd0942c><!--[--><span class="vpi-sun sun" data-v-e849151b></span><span class="vpi-moon moon" data-v-e849151b></span><!--]--></span></span></button></div></div></div><div class="group" data-v-caf237e9><div class="item social-links" data-v-caf237e9><div class="VPSocialLinks social-links-list" data-v-caf237e9 data-v-d48d24d3><!--[--><a class="VPSocialLink no-icon" href="https://github.com/imfineandyou0827" aria-label="github" target="_blank" rel="noopener" data-v-d48d24d3 data-v-bd0b0947><span class="vpi-social-github"></span></a><!--]--></div></div></div><!--]--><!--]--></div></div></div><!--[--><!--]--><button type="button" class="VPNavBarHamburger hamburger" aria-label="mobile navigation" aria-expanded="false" aria-controls="VPNavScreen" data-v-b48d238c data-v-8f2aaefe><span class="container" data-v-8f2aaefe><span class="top" data-v-8f2aaefe></span><span class="middle" data-v-8f2aaefe></span><span class="bottom" data-v-8f2aaefe></span></span></button></div></div></div></div><div class="divider" data-v-b48d238c><div class="divider-line" data-v-b48d238c></div></div></div><!----></header><div class="VPLocalNav empty fixed" data-v-f6d2c060 data-v-fb7e3413><div class="container" data-v-fb7e3413><!----><div class="VPLocalNavOutlineDropdown" style="--vp-vh:0px;" data-v-fb7e3413 data-v-22d19a39><button data-v-22d19a39>Return to top</button><!----></div></div></div><!----><div class="VPContent" id="VPContent" data-v-f6d2c060 data-v-f752f864><div class="VPDoc has-aside" data-v-f752f864 data-v-f6cccb49><!--[--><!--]--><div class="container" data-v-f6cccb49><div class="aside" data-v-f6cccb49><div class="aside-curtain" data-v-f6cccb49></div><div class="aside-container" data-v-f6cccb49><div class="aside-content" data-v-f6cccb49><div class="VPDocAside" data-v-f6cccb49 data-v-69d6e70d><!--[--><!--]--><!--[--><!--]--><nav aria-labelledby="doc-outline-aria-label" class="VPDocAsideOutline" data-v-69d6e70d data-v-aa8d14df><div class="content" data-v-aa8d14df><div class="outline-marker" data-v-aa8d14df></div><div aria-level="2" class="outline-title" id="doc-outline-aria-label" role="heading" data-v-aa8d14df>目录</div><ul class="VPDocOutlineItem root" data-v-aa8d14df data-v-639ec60c><!--[--><!--]--></ul></div></nav><!--[--><!--]--><div class="spacer" data-v-69d6e70d></div><!--[--><!--]--><!----><!--[--><!--]--><!--[--><!--]--></div></div></div></div><div class="content" data-v-f6cccb49><div class="content-container" data-v-f6cccb49><!--[--><!--]--><main class="main" data-v-f6cccb49><div style="position:relative;" class="vp-doc _notes_c++%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%AC%94%E8%AE%B0_C++%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94CRTP" data-v-f6cccb49><div><p>CRTP(curiously recurring template pattern, 奇异递归模式)，这个名字奇怪的模式，是一种将继承和静态多态结合的技术。</p><blockquote><p>多态是一种用单个统一的符号将多种特定行为关联起来的能力，是面向对象编的基石，在 C++中它主要由继承和虚函数实现。由于这一机制主要（至少是一部分）在运行期间起作用，因此我们称之为动态多态（dynamic polymorphism）。它也是我们通常在讨论 C++中的简单多态时所指的多态。但是，模板也允许我们用单个统一符号将不同的特定行为 关联起来，不过该关联主要发生在编译期间，我们称之为静态多态（static polymorphism）。</p></blockquote><h2 id="使用crtp的动机" tabindex="-1"><strong>使用CRTP的动机</strong> <a class="header-anchor" href="#使用crtp的动机" aria-label="Permalink to &quot;**使用CRTP的动机**&quot;">​</a></h2><blockquote><p>性能在C++中极为重要，而使用虚函数存在性能开销。因此，在对性能敏感的环境中，例如计算机游戏或高频交易的某些部分，不会使用虚函数。在高性能计算（HPC）中也是如此。在HPC中，任何类型的条件判断或间接寻址，包括虚函数，都被禁止在性能最关键的部分使用。</p></blockquote><p>接下来将举一个例子，分别用动态多态、静态多态和CRTP实现，例子原型来自：</p><blockquote><p><a href="https://en.cppreference.com/w/cpp/language/crtp" target="_blank" rel="noreferrer">https://en.cppreference.com/w/cpp/language/crtp</a></p></blockquote><h2 id="动态多态实现" tabindex="-1">动态多态实现 <a class="header-anchor" href="#动态多态实现" aria-label="Permalink to &quot;动态多态实现&quot;">​</a></h2><p>假设有一个基类<code>Base</code>，其中有一个纯虚函数<code>impl()</code></p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>class Base</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>public:</span></span>
+<span class="line"><span>    virtual void impl()=0;</span></span>
+<span class="line"><span>};</span></span></code></pre></div><p>接着有两个<code>Base</code>的派生类:D1,D2,各自实现了<code>impl()</code>函数:</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>class D1:public Base</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>public:</span></span>
+<span class="line"><span>    virtual void impl() override</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        std::cout&lt;&lt;&quot;D1:impl()&quot;&lt;&lt;std::endl;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>};</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>class D2:public Base</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>public:</span></span>
+<span class="line"><span>    virtual void impl() override</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        std::cout&lt;&lt;&quot;D2:impl()&quot;&lt;&lt;std::endl;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>};</span></span></code></pre></div><p>我们可以在函数中调用：</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>void exec(Base &amp;obj)</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>    obj.impl();</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>int main()</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>    D1 d1;</span></span>
+<span class="line"><span>    D2 d2;</span></span>
+<span class="line"><span>    exec(d1);</span></span>
+<span class="line"><span>    exec(d2);</span></span>
+<span class="line"><span>    return 0;</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>结果就会打印输出：</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>D1::impl()</span></span>
+<span class="line"><span>D2::impl()</span></span></code></pre></div><h2 id="静态多态实现" tabindex="-1"><strong>静态多态实现</strong> <a class="header-anchor" href="#静态多态实现" aria-label="Permalink to &quot;**静态多态实现**&quot;">​</a></h2><p>同样可以用静态多态来实现上面的功能，静态多态通过模板来实现，首先同样是定义类<code>D1</code>和<code>D2</code>,不同的是这回它们不再是派生类：</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>class D1</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>public:</span></span>
+<span class="line"><span>    void impl() </span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        std::cout&lt;&lt;&quot;D1:impl()&quot;&lt;&lt;std::endl;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>};</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>class D2</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>public:</span></span>
+<span class="line"><span>    void impl() </span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        std::cout&lt;&lt;&quot;D2:impl()&quot;&lt;&lt;std::endl;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>};</span></span></code></pre></div><p>接着实现一个模板函数:</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>template &lt;typename T&gt;</span></span>
+<span class="line"><span>void exec(T obj)</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>    obj.impl();</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>我们就可以调用这个函数达到多态的目的：</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>int main()</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>    D1 d1;</span></span>
+<span class="line"><span>    D2 d2;</span></span>
+<span class="line"><span>    exec(d1);</span></span>
+<span class="line"><span>    exec(d2);</span></span>
+<span class="line"><span>    return 0; </span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>结果同样会打印输出：</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>D1::impl()</span></span>
+<span class="line"><span>D2::impl()</span></span></code></pre></div><p>静态多态在编译器就确认了<code>exec</code>中具体调用哪个函数，比动态多态在运行期根据虚函数表去查找有性能的提升。但是从静态多态的例子中我们可以发现，<code>D1</code>和<code>D2</code>不是继承某个基类，意味着没有代码复用。就算<code>D1</code>类和<code>D2</code>类中其他函数都相同，只有<code>impl</code>函数的实现不同，<code>D1</code>和<code>D2</code>类还是要重复那些实现相同的函数。</p><h2 id="crtp-模式实现" tabindex="-1"><strong>CRTP 模式实现</strong> <a class="header-anchor" href="#crtp-模式实现" aria-label="Permalink to &quot;**CRTP 模式实现**&quot;">​</a></h2><p>CRTP模式将继承和静态多态结合，既能通过静态多态提升性能，也能通过继承进行代码复用。CRTP实际实现是将派生类作为模板参数传递给其某个基类。</p><p>首先定义一个模板基类<code>Base</code>:</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>template &lt;typename T&gt;</span></span>
+<span class="line"><span>class Base</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>    void impl()</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        static_cast&lt;T *&gt;(this)-&gt;impl();</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>    void exec()</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        std::cout&lt;&lt;&quot;Base::exec()&quot;&lt;&lt;std::endl;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>接着<code>D1</code>和<code>D2</code>分别将自己作为模板参数传递给<code>Base</code>:</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>class D1:Base&lt;D1&gt;</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>public:</span></span>
+<span class="line"><span>    void impl() </span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        std::cout&lt;&lt;&quot;D1:impl()&quot;&lt;&lt;std::endl;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>};</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>class D2:Base&lt;D2&gt;</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>public:</span></span>
+<span class="line"><span>    void impl() </span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        std::cout&lt;&lt;&quot;D2:impl()&quot;&lt;&lt;std::endl;</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>};</span></span></code></pre></div><p>我们就可以使用：</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>int main()</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>    D1 d1;</span></span>
+<span class="line"><span>    D2 d2;</span></span>
+<span class="line"><span>    d1.impl();</span></span>
+<span class="line"><span>    d2.impl();</span></span>
+<span class="line"><span>    d1.exec();</span></span>
+<span class="line"><span>    d2.exec();</span></span>
+<span class="line"><span>    return 0;</span></span>
+<span class="line"><span>}</span></span></code></pre></div><p>输出结果是：</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>D1::impl()</span></span>
+<span class="line"><span>D2::impl()</span></span>
+<span class="line"><span>Base::exec()</span></span>
+<span class="line"><span>Base::exec()</span></span></code></pre></div><p><strong>CRTP的缺点</strong></p><p>CRTP的例子中我们可以发现，D1和D2缺少共同的基类，没错，D1和D2继承的不是同一个基类。 D1的基类是Base&lt;D1&gt;,D2的基类是Base&lt;D2&gt;。</p><blockquote><p>因此，每当需要一个共同的基类时，例如，为了在一个集合中存储不同类型而需要的共同抽象，CRTP设计模式就不是正确的选择。</p></blockquote></div></div></main><footer class="VPDocFooter" data-v-f6cccb49 data-v-1ce20d49><!--[--><!--]--><!----><!----></footer><!--[--><!--]--></div></div></div><!--[--><!--]--></div></div><!----><!--[--><!--]--></div></div>
+    <script>window.__VP_HASH_MAP__=JSON.parse("{\"archive.md\":\"C1PLcxN5\",\"friend.md\":\"BSRu1JQt\",\"index.md\":\"CHQH3Mt6\",\"life.md\":\"CcQrFimW\",\"notes.md\":\"CbXT4SuV\",\"notes_c__设计模式笔记_c__设计模式笔记——crtp.md\":\"CFRneO5d\",\"notes_c__设计模式笔记_c__设计模式笔记——原型模式.md\":\"D20qlhf_\",\"notes_c__设计模式笔记_c__设计模式笔记——策略模式.md\":\"CFj62mV1\",\"tags.md\":\"CGn4vSCL\",\"tools.md\":\"CaV0Xc5g\",\"travel.md\":\"DRloWRhk\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"姚杰的博客\",\"description\":\"说说我的生活\",\"base\":\"/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"logo\":\"/logo.png\",\"nav\":[{\"text\":\"首页\",\"link\":\"/\"},{\"text\":\"归档\",\"link\":\"/archive\"},{\"text\":\"标签\",\"link\":\"/tags\"},{\"text\":\"笔记\",\"link\":\"/notes\"},{\"text\":\"生活\",\"link\":\"/life\"},{\"text\":\"旅程\",\"link\":\"/travel\"},{\"text\":\"友链\",\"link\":\"/friend\"},{\"text\":\"工具箱\",\"link\":\"/tools\"},{\"text\":\"GitHub\",\"link\":\"https://github.com/imfineandyou0827\",\"target\":\"_blank\"}],\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/imfineandyou0827\"}],\"outline\":\"deep\",\"outlineTitle\":\"目录\"},\"locales\":{},\"scrollOffset\":134,\"cleanUrls\":false}");</script>
+    
+  </body>
+</html>

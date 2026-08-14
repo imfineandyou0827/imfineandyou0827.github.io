@@ -1,0 +1,1 @@
+import{_ as a,c as t,o,ae as r}from"./chunks/framework.Dgg8-8ov.js";const m=JSON.parse('{"title":"笔记","description":"","frontmatter":{},"headers":[],"relativePath":"notes.md","filePath":"notes.md"}'),n={name:"notes.md"};function l(s,e,i,c,_,h){return o(),t("div",null,e[0]||(e[0]=[r("",5)]))}const B=a(n,[["render",l]]);export{m as __pageData,B as default};
